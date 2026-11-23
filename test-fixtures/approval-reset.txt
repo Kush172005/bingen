@@ -1,0 +1,1 @@
+Verify that a new commit requires a new approval.
