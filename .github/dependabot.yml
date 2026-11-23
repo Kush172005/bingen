@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: gomod
-    directory: /test-fixtures/security
+    directory: /test-fixtures/verified
     schedule:
       interval: daily
     cooldown:
