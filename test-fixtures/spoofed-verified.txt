@@ -1,0 +1,1 @@
+Test a verified signature with a spoofed Dependabot author.
