@@ -3,7 +3,7 @@ name: Dependabot auto-merge
 on:
   pull_request_target:
     types: [opened, reopened, synchronize]
-    branches: [dependabot-test]
+    branches: [dependabot-test-v3]
 
 permissions: {}
 
@@ -19,7 +19,7 @@ jobs:
       # Do not check out or execute pull request code in this privileged workflow.
       - name: Verify Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@d7267f607e9d3fb96fc2fbe83e0af444713e90b7 # v2.3.0
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
