@@ -47,3 +47,10 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 7
+
+  - package-ecosystem: "gomod"
+    directory: "/test-fixtures/patch-v4"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7

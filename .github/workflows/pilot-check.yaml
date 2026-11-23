@@ -1,7 +1,7 @@
 name: Pilot checks
 on:
   pull_request:
-    branches: [dependabot-test-v3]
+    branches: [dependabot-test-v4]
 jobs:
   pilot-check:
     runs-on: ubuntu-latest

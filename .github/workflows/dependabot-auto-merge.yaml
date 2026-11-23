@@ -3,7 +3,7 @@ name: Dependabot auto-merge
 on:
   pull_request_target:
     types: [opened, reopened, synchronize]
-    branches: [dependabot-test-v3]
+    branches: [dependabot-test-v4]
 
 permissions: {}
 
@@ -17,7 +17,23 @@ jobs:
       pull-requests: write
     steps:
       # Do not check out or execute pull request code in this privileged workflow.
+      - name: Verify every commit
+        id: commits
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          commits=$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/commits?per_page=100")
+          if printf '%s' "$commits" | jq -e --arg head "$HEAD_SHA" '
+            add | length > 0 and .[-1].sha == $head and
+            all(.[]; .author.login == "dependabot[bot]" and .commit.verification.verified == true)
+          ' > /dev/null; then
+            echo "verified=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Verify Dependabot metadata
+        if: steps.commits.outputs.verified == 'true'
         id: metadata
         uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
         with:
