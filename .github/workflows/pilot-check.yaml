@@ -1,0 +1,9 @@
+name: Pilot checks
+on:
+  pull_request:
+    branches: [dependabot-test]
+jobs:
+  pilot-check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Pilot check passed"
