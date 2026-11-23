@@ -2,7 +2,7 @@ module example.com/dependabot-test
 
 go 1.26.6
 
-require rsc.io/quote v1.5.1
+require rsc.io/quote v1.5.2
 
 require (
 	golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c // indirect
