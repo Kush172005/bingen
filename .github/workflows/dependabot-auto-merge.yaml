@@ -3,7 +3,7 @@ name: Dependabot auto-merge
 on:
   pull_request_target:
     types: [opened, reopened, synchronize]
-    branches: [dependabot-test-v4]
+    branches: [dependabot-security-test]
 
 permissions: {}
 
@@ -17,7 +17,8 @@ jobs:
       pull-requests: write
     steps:
       # Do not check out or execute pull request code in this privileged workflow.
-      - name: Verify every commit
+      # fetch-metadata reads the first commit, so require exactly one commit.
+      - name: Verify Dependabot commit
         id: commits
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -25,9 +26,13 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           commits=$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/commits?per_page=100")
+          # GitHub-signed Dependabot commits use the web-flow committer.
           if printf '%s' "$commits" | jq -e --arg head "$HEAD_SHA" '
-            add | length > 0 and .[-1].sha == $head and
-            all(.[]; .author.login == "dependabot[bot]" and .commit.verification.verified == true)
+            add | length == 1 and .[0].sha == $head and
+            all(.[]; .author.id == 49699333 and .author.login == "dependabot[bot]" and
+              .committer.id == 19864447 and .committer.login == "web-flow" and
+              .commit.committer.email == "noreply@github.com" and
+              .commit.verification.verified == true and .commit.verification.reason == "valid")
           ' > /dev/null; then
             echo "verified=true" >> "$GITHUB_OUTPUT"
           fi
